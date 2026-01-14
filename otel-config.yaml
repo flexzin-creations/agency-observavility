@@ -23,7 +23,7 @@ exporters:
       insecure: true
 
   # Útil para debug: muestra lo que recibe en la consola del contenedor
-  logging:
+  debug:
     verbosity: basic
 
 service:
