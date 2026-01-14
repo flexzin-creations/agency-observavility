@@ -12,6 +12,8 @@ processors:
     send_batch_size: 1024
 
 exporters:
+  prometheus:
+      endpoint: "0.0.0.0:8889" # El Collector abrirá este puerto para Prometheus
   # Envía los logs a Loki
   otlphttp/loki:
     endpoint: "http://loki:3100/otlp"
@@ -36,3 +38,6 @@ service:
       receivers: [otlp]
       processors: [batch]
       exporters: [otlphttp/loki, debug] # Cambiamos logging por debug aquí
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus, debug]
