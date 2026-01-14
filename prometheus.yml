@@ -8,6 +8,6 @@ scrape_configs:
       - targets: ["otel-collector:8889"]
 
   # OPCIONAL: Si alguna API no usa el collector y quieres leerla directo:
-  # - job_name: 'external-apis'
-  #   static_configs:
-  #     - targets: ['api-dev.altasg2.org:9464'] # API externa
+  - job_name: 'external-apis'
+    static_configs:
+      - targets: ['api-dev.altasg2.org:9464'] # API externa
