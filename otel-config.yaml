@@ -31,8 +31,8 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp/tempo]
+      exporters: [otlp/tempo, debug] # Añadimos debug aquí si quieres ver trazas en consola
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp/loki]
+      exporters: [otlphttp/loki, debug] # Cambiamos logging por debug aquí
