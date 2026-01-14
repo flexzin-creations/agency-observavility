@@ -15,10 +15,10 @@ services:
     container_name: otel-collector
     command: ["--config=/etc/otel-config.yaml"]
     volumes:
-      - ./otel-config.yaml:/etc/otel-config.yaml
+      - ./otel-config.yaml:/etc/otel-config.yaml # <--- Ruta relativa
     ports:
-      - "4317:4317" # gRPC (NestJS)
-      - "4318:4318" # HTTP (React Native / Web)
+      - "4317:4317"
+      - "4318:4318"
     networks:
       - observability-net
 
@@ -31,7 +31,7 @@ services:
     image: grafana/tempo:latest
     command: ["-config.file=/etc/tempo.yaml"]
     volumes:
-      - ./tempo-config.yaml:/etc/tempo.yaml
+      - ./tempo-config.yaml:/etc/tempo.yaml # <--- Ruta relativa
     networks:
       - observability-net
 
