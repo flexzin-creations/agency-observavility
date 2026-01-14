@@ -13,7 +13,7 @@ processors:
 
 exporters:
   prometheus:
-      endpoint: "0.0.0.0:8889" # El Collector abrirá este puerto para Prometheus
+    endpoint: "0.0.0.0:8889" # El Collector abrirá este puerto para Prometheus
   # Envía los logs a Loki
   otlphttp/loki:
     endpoint: "http://loki:3100/otlp"
@@ -40,4 +40,5 @@ service:
       exporters: [otlphttp/loki, debug] # Cambiamos logging por debug aquí
     metrics:
       receivers: [otlp]
-      exporters: [prometheus, debug]
+      processors: [batch]
+      exporters: [prometheus, debug] # <--- Verifica que 'prometheus' esté aquí
