@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3012:3000" # <--- Mapeo: Accedes por el 3012 del VPS, interno es 3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=tu_password_seguro
+    networks:
+      - observability-net
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    command: ["--config=/etc/otel-config.yaml"]
+    volumes:
+      - ./otel-config.yaml:/etc/otel-config.yaml
+    ports:
+      - "4317:4317" # gRPC (NestJS)
+      - "4318:4318" # HTTP (React Native / Web)
+    networks:
+      - observability-net
+
+  loki:
+    image: grafana/loki:latest
+    networks:
+      - observability-net
+
+  tempo:
+    image: grafana/tempo:latest
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./tempo-config.yaml:/etc/tempo.yaml
+    networks:
+      - observability-net
+
+networks:
+  observability-net:
+    driver: bridge
