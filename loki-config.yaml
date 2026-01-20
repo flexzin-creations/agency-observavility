@@ -36,14 +36,16 @@ schema_config:
 ruler:
   alertmanager_url: http://localhost:9093
 
+# ESTO ES LO QUE NECESITAS PARA EL LOG VOLUME
 limits_config:
   volume_enabled: true
-  retention_period: 744h
+  retention_period: 744h # 31 días
   max_query_series: 100000
   max_query_lookback: 0
   split_queries_by_interval: 15m
   max_cache_freshness_per_query: 10m
 
+# Configuración de compactación y retención
 compactor:
   working_directory: /loki/compactor
   compaction_interval: 10m
@@ -51,12 +53,13 @@ compactor:
   retention_delete_delay: 2h
   retention_delete_worker_count: 150
 
+# Limita el tamaño de streams para evitar problemas de memoria
 ingester:
   max_chunk_age: 1h
   chunk_idle_period: 30m
   chunk_retain_period: 30s
-  max_transfer_retries: 0
 
+# Configuración de tabla para el índice
 table_manager:
   retention_deletes_enabled: true
   retention_period: 744h
