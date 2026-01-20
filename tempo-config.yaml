@@ -1,6 +1,8 @@
 stream_over_http_enabled: true
+
 server:
   http_listen_port: 3200
+  grpc_listen_port: 9095
 
 distributor:
   receivers:
@@ -14,14 +16,19 @@ distributor:
 ingester:
   max_block_duration: 5m
 
-storage:
-  trace:
-    backend: local # Guardamos en disco local para no pagar S3
-    local:
-      path: /tmp/tempo/traces
-    wal:
-      path: /tmp/tempo/wal
-
 compactor:
   compaction:
-    block_retention: 48h # Como eres solo dev, 2 días de trazas es suficiente
+    block_retention: 48h
+
+storage:
+  trace:
+    backend: local
+    wal:
+      path: /tmp/tempo/wal
+    local:
+      path: /tmp/tempo/blocks
+
+overrides:
+  defaults:
+    metrics_generator:
+      processors: []

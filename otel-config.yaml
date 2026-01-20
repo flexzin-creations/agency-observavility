@@ -5,40 +5,74 @@ receivers:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - "http://*"
+            - "https://*"
 
 processors:
   batch:
     timeout: 1s
     send_batch_size: 1024
 
+  # Útil para filtrar métricas si recibes demasiadas
+  # filter:
+  #   metrics:
+  #     exclude:
+  #       match_type: strict
+  #       metric_names:
+  #         - unnecessary.metric
+
 exporters:
+  # Exportador de Prometheus - CRÍTICO
   prometheus:
-    endpoint: "0.0.0.0:8889" # El Collector abrirá este puerto para Prometheus
-  # Envía los logs a Loki
+    endpoint: "0.0.0.0:8889"
+    namespace: "otel"
+    const_labels:
+      environment: "dev"
+    send_timestamps: true
+    metric_expiration: 5m
+    enable_open_metrics: true
+
+  # Logs a Loki
   otlphttp/loki:
     endpoint: "http://loki:3100/otlp"
+    tls:
+      insecure: true
 
-  # Envía las trazas a Tempo
+  # Trazas a Tempo
   otlp/tempo:
     endpoint: "tempo:4317"
     tls:
       insecure: true
 
-  # Útil para debug: muestra lo que recibe en la consola del contenedor
+  # Debug para ver qué está recibiendo el collector
   debug:
-    verbosity: basic
+    verbosity: detailed
+    sampling_initial: 5
+    sampling_thereafter: 200
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp/tempo, debug] # Añadimos debug aquí si quieres ver trazas en consola
+      exporters: [otlp/tempo, debug]
+
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp/loki, debug] # Cambiamos logging por debug aquí
+      exporters: [otlphttp/loki, debug]
+
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [prometheus, debug] # <--- Verifica que 'prometheus' esté aquí
+      exporters: [prometheus, debug] # ASEGÚRATE que 'prometheus' esté aquí
+
+  # Configuración de telemetría del propio collector
+  telemetry:
+    logs:
+      level: info
+    metrics:
+      level: detailed
+      address: 0.0.0.0:8888
