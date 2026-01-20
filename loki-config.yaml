@@ -33,16 +33,11 @@ schema_config:
         prefix: index_
         period: 24h
 
-ruler:
-  alertmanager_url: http://localhost:9093
-
 limits_config:
   volume_enabled: true
   retention_period: 744h
   max_query_series: 100000
-  max_query_lookback: 0
   split_queries_by_interval: 15m
-  max_cache_freshness_per_query: 10m
 
 compactor:
   working_directory: /loki/compactor
@@ -50,12 +45,9 @@ compactor:
   retention_enabled: true
   retention_delete_delay: 2h
   retention_delete_worker_count: 150
+  delete_request_store: filesystem
 
 ingester:
-  max_chunk_age: 1h
   chunk_idle_period: 30m
   chunk_retain_period: 30s
-
-table_manager:
-  retention_deletes_enabled: true
-  retention_period: 744h
+  max_chunk_age: 1h
