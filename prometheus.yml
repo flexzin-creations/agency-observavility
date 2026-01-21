@@ -19,7 +19,7 @@ scrape_configs:
   # APIs externas (si exponen métricas directamente)
   - job_name: "external-apis"
     static_configs:
-      - targets: [""]
+      - targets: []
     scrape_interval: 30s
     scrape_timeout: 10s
     # Opcional: solo si necesitas verificar certificados
