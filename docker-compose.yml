@@ -35,11 +35,7 @@ services:
     depends_on:
       - loki
       - tempo
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:13133/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    
 
   loki:
     image: grafana/loki:3.3.0
